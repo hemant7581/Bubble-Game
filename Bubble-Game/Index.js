@@ -49,8 +49,9 @@ document.querySelector('.bottom-bar').addEventListener('click', function(details
     let clickedNum = Number(details.target.textContent);
     if (clickedNum == Hit) {
         IncScore();
+        hitVal()
     }
 });
 runtimer();
-makeBubble();
 hitVal();
+makeBubble();
