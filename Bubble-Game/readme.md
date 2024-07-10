@@ -16,7 +16,7 @@ To run the Bubble game locally, follow these steps:
 
 ## Event Bubbling
 
-Event bubbling is a concept in web development that relates to how events are handled and propagated through the Document Object Model (DOM) hierarchy in HTML. When an event, such as a click or keypress, occurs on an HTML element, it not only triggers the event handler associated with that element but also propagates through the ancestors of that element in the DOM tree.
+Event bubbling is a concept in web deve that relates to how events are handled and propagated through the Document Object Model (DOM) hierarchy in HTML. When an event, such as a click or keypress, occurs on an HTML element, it not only triggers the event handler associated with that element but also propagates through the ancestors of that element in the DOM tree.
 
 ## Features
 
