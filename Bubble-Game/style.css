@@ -53,13 +53,17 @@ html,body{
     border-radius: 5px;
 }
 .bottom-bar{
-    padding: 12px;
+    padding:12px;
     width: 100%;
     height:calc(100% - 70px);
     /* background-color: black; */
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    
     
 }
 

@@ -4,34 +4,242 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BUBBLE GAME</title>
-    <link rel="stylesheet" href="style.css" />
+    <!-- Import Google Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" />
+    <style>
+      * {
+        padding: 0;
+        box-sizing: border-box;
+        margin: 0;
+        font-family: 'Roboto', sans-serif; /* Apply the imported font */
+      }
+      html, body {
+        height: 100%;
+        width: 100%;
+      }
+      #main {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        background-color: #9ED2BE;
+      }
+      .bar {
+        width: 90%;
+        height: 90%;
+        background-color: #fff;
+        position: relative;
+      }
+      .top-bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        background-color: aquamarine;
+        height: 70px;
+      }
+      .top-bar h3 {
+        text-align: center;
+        font-weight: 700; /* Bold font for better readability */
+      }
+      .top-bar .show1, .top-bar .show2, .top-bar .show3 {
+        background-color: #fff;
+        height: 25px;
+        width: 25px;
+        text-align: center;
+        padding: 2px;
+        display: inline-block;
+        border-radius: 5px;
+        font-weight: 700; /* Bold font for better readability */
+      }
+      .bottom-bar {
+        padding: 12px;
+        width: 100%;
+        height: calc(100% - 70px);
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        overflow: hidden;
+        align-items: center;
+        justify-content: center;
+      }
+      .bubble {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        background-color: #7EAA92;
+        color: black;
+        font-weight: 900;
+        cursor: pointer;
+      }
+      .bubble:hover, .bubble:focus {
+        background-color: rgb(43, 131, 43);
+      }
+      .game-over {
+        display: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+      }
+      .buttons {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 20px;
+      }
+      .buttons button {
+        padding: 10px 20px;
+        cursor: pointer;
+        border: none;
+        border-radius: 5px;
+        font-family: 'Roboto', sans-serif; /* Apply the imported font */
+      }
+      .reset-button {
+        position: absolute;
+        top: 1rem;
+        right: 10px;
+        padding: 10px 20px;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-family: 'Roboto', sans-serif; /* Apply the imported font */
+      }
+      .reset-button:hover {
+        background-color: #d32f2f;
+      }
+    </style>
   </head>
   <body>
     <div id="main">
       <div class="bar">
         <div class="top-bar">
-          <h3>
-            Hit
-            <span class="show1" id="HitVal"></span>
-          </h3>
-          <h3>
-            Time
-            <span class="show2" id="timerVal"></span>
-          </h3>
-          <h3>
-            Score
-            <span class="show3" id="scoreVal">0</span>
-          </h3>
+          <h3>Hit <span class="show1" id="HitVal"></span></h3>
+          <h3>Time <span class="show2" id="timerVal"></span></h3>
+          <h3>Score <span class="show3" id="scoreVal">0</span></h3>
         </div>
-        <div class="bottom-bar">
-          <div class="bubble">3</div>
-
+        <div class="bottom-bar"></div>
+        <div class="game-over" id="gameOver">
+          <h2>Game Over</h2>
+          <p>Your score: <span id="finalScore"></span></p>
+          <p>High score: <span id="highScore"></span></p>
+          <div class="buttons">
+            <button id="playAgain">Play Again</button>
+            <button id="resetGame">Reset</button>
+          </div>
         </div>
+        <button class="reset-button" id="resetButton">Reset</button>
       </div>
     </div>
+    <script>
+      let hitValue = 0; // The target value to be hit
+      let timer = 60; // Initial timer value in seconds
+      let score = 0; // Initial score
+      let highScore = 0; // Initial high score
+      let timerInterval; // Variable to store the timer interval
 
+      // Function to create multiple bubbles with random numbers
+      function makeBubbles() {
+        let bubblesHTML = "";
+        for (let i = 0; i <= 210; i++) {
+          let num = Math.floor(Math.random() * 10); // Generate random number between 0 and 9
+          bubblesHTML += `<div class="bubble">${num}</div>`; // Add bubble HTML with random number
+        }
+        document.querySelector('.bottom-bar').innerHTML = bubblesHTML; // Update bottom-bar with bubbles
+      }
 
+      // Function to run the timer and update the timer display
+      function runTimer() {
+        timerInterval = setInterval(function() {
+          if (timer > 0) {
+            timer--;
+            document.querySelector('#timerVal').textContent = timer; // Update timer display
+          } else {
+            clearInterval(timerInterval); // Stop timer when it reaches 0
+            endGame(); // End game when timer reaches 0
+          }
+        }, 1000);
+      }
 
-    <script src="Index.js"></script>
+      // Function to set a new random hit value
+      function setHitValue() {
+        hitValue = Math.floor(Math.random() * 10); // Generate random number between 0 and 9
+        document.querySelector('#HitVal').textContent = hitValue; // Update hit value display
+      }
+
+      // Function to increment the score
+      function incrementScore() {
+        score += 10;
+        document.querySelector('#scoreVal').textContent = score; // Update score display
+      }
+
+      // Function to decrement the score
+      function decrementScore() {
+        score -= 10;
+        if (score <= 0) {
+          score = 0; // Ensure score does not go below 0
+          timer = 0; // Set timer to 0 when score reaches 0
+          document.querySelector('#timerVal').textContent = timer; // Update timer display
+          endGame(); // End game if score reaches 0
+        }
+        document.querySelector('#scoreVal').textContent = score; // Update score display
+      }
+
+      // Function to handle game over state
+      function endGame() {
+        clearInterval(timerInterval); // Clear the timer interval
+        document.querySelector('.bottom-bar').style.display = 'none'; // Hide bubbles
+        document.querySelector('#gameOver').style.display = 'block'; // Show game over message
+        document.querySelector('#finalScore').textContent = score; // Show final score
+        if (score > highScore) {
+          highScore = score; // Update high score if current score is higher
+        }
+        document.querySelector('#highScore').textContent = highScore; // Show high score
+      }
+
+      // Function to reset and restart the game
+      function resetGame() {
+        clearInterval(timerInterval); // Clear any existing timer interval
+        timer = 60; // Reset timer
+        score = 0; // Reset score
+        document.querySelector('#timerVal').textContent = timer; // Update timer display
+        document.querySelector('#scoreVal').textContent = score; // Update score display
+        document.querySelector('.bottom-bar').style.display = 'flex'; // Show bubbles
+        document.querySelector('#gameOver').style.display = 'none'; // Hide game over message
+        makeBubbles(); // Create new bubbles
+        setHitValue(); // Set new hit value
+        runTimer(); // Start timer
+      }
+
+      // Event listener for clicking bubbles
+      document.querySelector('.bottom-bar').addEventListener('click', function(event) {
+        let clickedNum = Number(event.target.textContent); // Get number of clicked bubble
+        if (clickedNum === hitValue) {
+          incrementScore(); // Increment score if clicked number matches hit value
+          setHitValue(); // Set new hit value
+        } else {
+          decrementScore(); // Decrement score if clicked number does not match hit value
+        }
+      });
+
+      // Event listeners for play again and reset buttons
+      document.querySelector('#playAgain').addEventListener('click', resetGame);
+      document.querySelector('#resetGame').addEventListener('click', resetGame);
+      document.querySelector('#resetButton').addEventListener('click', resetGame);
+
+      // Initial game setup
+      resetGame();
+    </script>
   </body>
 </html>
